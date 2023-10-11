@@ -107,3 +107,33 @@ CLI usage:
 `docker build --build-arg DEFAULT_PORT=8000`
 
 ## Networking and cross-container communication
+
+### Accessing host machine
+
+`host.docker.internal` is a special DNS name that can be used in Docker containers to access services running on the host machine, where the Docker engine is installed. This DNS name is a feature provided by Docker for macOS and Docker for Windows to simplify networking between containers and the host
+
+### Accessing another container
+
+It is possible to establish communication between containers either looking to its IP address with `docker inspect <container_name>` or by creating a docker container network.
+
+![Alt text](./images/networks.png)
+
+- `docker network create <network_name>`: creates a docker network
+
+Then, on code, it is possible to use the image name as address, like so:
+
+```javascript
+const config = {
+  mongoUri: "mongodb://mongodb:27017/swfavorites",
+  // in this case, mongodb is the name of the container we want to connect
+};
+```
+
+> Docker Networks actually support different kinds of "Drivers" which influence the behavior of the Network. The default driver is the "bridge" driver - it provides the behavior shown before (i.e. Containers can find each other by name if they are in the same Network).
+> Docker also supports these alternative drivers - though you will use the "bridge" driver in most cases:
+>
+> - **host**: For standalone containers, isolation between container and host system is removed (i.e. they share localhost as a network)
+> - **overlay**: Multiple Docker daemons (i.e. Docker running on different machines) are able to connect with each other. Only works in "Swarm" mode which is a dated / almost deprecated way of connecting multiple containers
+> - **macvlan**: You can set a custom MAC address to a container - this address can then be used for communication with that container
+> - **none**: All networking is disabled.
+> - **Third-party plugins**: You can install third-party plugins which then may add all kinds of behaviors and functionalities
