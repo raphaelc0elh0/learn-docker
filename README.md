@@ -137,3 +137,18 @@ const config = {
 > - **macvlan**: You can set a custom MAC address to a container - this address can then be used for communication with that container
 > - **none**: All networking is disabled.
 > - **Third-party plugins**: You can install third-party plugins which then may add all kinds of behaviors and functionalities
+
+## Docker Compose
+
+Docker Compose is a tool for defining and running multi-container Docker applications. It allows you to manage and configure multiple Docker containers as a single application, making it easier to set up complex, multi-service environments.
+
+[Docker Compose Docs](https://docs.docker.com/compose/compose-file/compose-file-v3/)
+
+### Docker Compose Commands
+
+- `docker compose up`: builds and starts containers
+  - `-d`: on background/detached
+  - `-build`: force rebuilding the images
+- `docker compose build`: only build images, do not start any containers
+- `docker compose down`: stops and removes containers
+- `docker compose stop`: only stops container, it does not remove any containers
