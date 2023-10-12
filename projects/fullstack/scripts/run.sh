@@ -1,0 +1,49 @@
+#! /usr/bin/env bash
+
+current_folder=$(dirname "$0")
+
+source $current_folder/utils.sh
+
+# network
+docker network create ${project_name}_network
+
+# mongo
+docker run \
+  -d \
+  --rm \
+  --name mongodb \
+  -v data:/data/db \
+  --network ${project_name}_network \
+  --env-file $current_folder/../backend/.env \
+  mongo
+
+# backend
+cd ./backend
+docker rmi backend:latest
+docker build -t backend:latest .
+docker run \
+  -d \
+  --rm \
+  -p 4000:80 \
+  --name ${project_name}_backend \
+  -v $PWD:/app \
+  -v backend_logs:/app/logs \
+  -v /app/node_modules \
+  --network ${project_name}_network \
+  --env-file ./.env \
+  backend:latest
+cd ../
+
+# frontend
+cd ./frontend
+docker rmi frontend:latest
+docker build -t frontend:latest .
+docker run \
+  -it \
+  -p 3000:3000 \
+  --name ${project_name}_frontend \
+  -v $PWD:/app \
+  -v /app/node_modules \
+  frontend:latest
+cd ../
+
