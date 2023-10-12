@@ -2,7 +2,7 @@
 
 current_folder=$(dirname "$0")
 
-source $current_folder/utils.sh
+source $current_folder/utils
 
 # network
 docker network create ${project_name}_network
